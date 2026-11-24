@@ -1,3 +1,5 @@
+> **CẬP NHẬT CẦN ĐỌC TRƯỚC:** Ảnh mới nhất cho thấy SpiderFoot hiện chạy `5001:5001`. Fork đã sửa `docker-compose.yml` sang host/internal **18994** và cần cập nhật **Stack đang tồn tại** để áp dụng, không tạo Stack trùng. Hướng dẫn: https://github.com/hoangthang0106/spiderfoot/blob/main/PORTAINER_FIX_PORT_18994.vi.md. Các app 2–5 **chưa đổi** khỏi 29002–29005 trên GitHub, vì người dùng yêu cầu sửa từng app, dự kiến sau này là 18995–18998. Kiểm tra cổng thực tế trước.
+
 # HƯỚNG DẪN ANDROID — CÀI 5 OSINT WEB QUA PORTAINER
 
 *Cập nhật 24/11/2026. Các file Git đã chuẩn bị; chưa xác minh IP/port thực tế, chưa chạy ứng dụng trên máy.*
@@ -14,7 +16,7 @@ sudo ss -ltnp
 docker ps -aq | xargs -r docker inspect --format '{{.Name}} {{json .HostConfig.PortBindings}}'
 ```
 
-Chỉ tiếp tục nếu cổng 29001–29005 được xác minh còn trống. Các cổng đã giữ chỗ trong [Sổ port](./PORT_REGISTRY.vi.md), không phải bằng chứng đang chạy.
+Chỉ tiếp tục nếu cổng 18994–29005 được xác minh còn trống. Các cổng đã giữ chỗ trong [Sổ port](./PORT_REGISTRY.vi.md), không phải bằng chứng đang chạy.
 
 ## B. Mật khẩu tự chọn — không cần băm hash
 
@@ -33,7 +35,7 @@ Không cần thêm biến port nếu dùng mặc định, nhưng **phải xác m
 
 | Thứ tự | Stack name | Fork repo | Port mặc định | Công dụng |
 |---|---|---|---:|---|
-| 1 | `osint-spiderfoot` | `https://github.com/hoangthang0106/spiderfoot` | 29001 | Tra cứu OSINT đa nguồn email/username/phone/domain/IP; xem liên kết dữ liệu |
+| 1 | `osint-spiderfoot` | `https://github.com/hoangthang0106/spiderfoot` | 18994 | Tra cứu OSINT đa nguồn email/username/phone/domain/IP; xem liên kết dữ liệu |
 | 2 | `osint-openosint` | `https://github.com/hoangthang0106/OpenOSINT` | 29002 | Chat/web điều tra, Holehe (email) + Sherlock (username); PhoneInfoga chưa có sẵn trong Dockerfile |
 | 3 | `osint-maigret` | `https://github.com/hoangthang0106/maigret` | 29003 | Tìm hồ sơ công khai theo username và xuất báo cáo |
 | 4 | `osint-phoneinfoga` | `https://github.com/hoangthang0106/phoneinfoga` | 29004 | Tra cứu metadata số điện thoại và dấu vết công khai |
@@ -47,7 +49,7 @@ Với ứng dụng 1, 2, 5 có `build:`. Nếu Portainer báo lỗi build image 
 
 1. Portainer → Stacks → Stack vừa tạo → Containers: kiểm tra app và gateway đang Running.
 2. Logs → xem error, lỗi cấu hình, pull image, build, database, memory.
-3. Trên Android cùng LAN: mở `http://LAN_IP:29001`, sau đó các cổng 29002, 29003, 29004; riêng **Social Analyzer** dùng `http://LAN_IP:29005/app.html`.
+3. Trên Android cùng LAN: mở `http://LAN_IP:18994`, sau đó các cổng 29002, 29003, 29004; riêng **Social Analyzer** dùng `http://LAN_IP:29005/app.html`.
 4. Trình duyệt yêu cầu Basic Auth: `OSINT_AUTH_USER` và **mật khẩu đã đặt**.
 5. Nếu có `502 Bad Gateway`, gateway đang chạy nhưng backend chưa sẵn sàng hoặc không kết nối được — xem Logs backend. Nếu `connection refused`, kiểm tra IP/port và gateway. Nếu Docker báo `port is already allocated`, dừng, kiểm kê lại host port; **không stop/xóa ứng dụng khác**.
 6. Khi hoạt động, ghi trạng thái *đã xác minh/đã cài* vào sổ nội bộ; chỉ ghi thông tin không nhạy cảm lên GitHub công khai.
@@ -67,4 +69,4 @@ Với ứng dụng 1, 2, 5 có `build:`. Nếu Portainer báo lỗi build image 
 - Portainer báo `reference not found` khi Sync nguồn Git: tham chiếu `main` có thể chưa tồn tại. Đã tạo `refs/heads/main` trên fork, vẫn giữ `master`.
 - Dùng `https://github.com/hoangthang0106/spiderfoot.git`, `refs/heads/main`, `portainer-compose.yml`.
 - Hướng dẫn từng bước: https://github.com/hoangthang0106/spiderfoot/blob/main/PORTAINER_FIX_GIT_ANDROID.vi.md
-- Chưa xác nhận Docker đã clone / build / chạy thành công; cổng 29001 chưa xác minh trên host thật.
+- Chưa xác nhận Docker đã clone / build / chạy thành công; cổng 18994 chưa xác minh trên host thật.
