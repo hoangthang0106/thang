@@ -58,7 +58,7 @@ Với ứng dụng 1, 2, 5 có `build:`. Nếu Portainer báo lỗi build image 
 
 1. Portainer → Stacks → Stack vừa tạo → Containers: kiểm tra app và gateway đang Running.
 2. Logs → xem error, lỗi cấu hình, pull image, build, database, memory.
-3. Trên Android cùng mạng LAN: mở `http://LAN_IP:29001`, lần lượt các cổng 29002/29003/29004/29005 sau khi cài đúng app.
+3. Trên Android cùng LAN: mở `http://LAN_IP:29001`, sau đó các cổng 29002, 29003, 29004; riêng **Social Analyzer** dùng `http://LAN_IP:29005/app.html`.
 4. Trình duyệt yêu cầu Basic Auth: `OSINT_AUTH_USER` và **mật khẩu gốc**.
 5. Nếu có `502 Bad Gateway`, gateway đang chạy nhưng backend chưa sẵn sàng hoặc không kết nối được — xem Logs backend. Nếu `connection refused`, kiểm tra IP/port và gateway. Nếu Docker báo `port is already allocated`, dừng, kiểm kê lại host port; **không stop/xóa ứng dụng khác**.
 6. Khi hoạt động, ghi trạng thái *đã xác minh/đã cài* vào sổ nội bộ; chỉ ghi thông tin không nhạy cảm lên GitHub công khai.
