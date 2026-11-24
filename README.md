@@ -1,11 +1,12 @@
 # IT-MANAGER — Sổ cấp phát PORT Docker / Proxmox
 
-Nguồn quy hoạch port cho các lần cài ứng dụng tiếp theo. **Không chứa IP nội bộ thật, mật khẩu, token hay VMID**. Repo này công khai; chỉ ghi số port/cấu hình dự kiến.
+**Mốc đã dùng gần nhất do người dùng xác nhận: 18893 (Synaplan Lite).** Lần cài mới tiếp theo bắt đầu từ 18894.
 
-- [Sổ port tiếng Việt](ports/PORT_REGISTRY.vi.md)
-- [Sổ máy đọc được (JSON)](ports/registry.json)
-- [Kiểm tra port tại Docker host (chỉ đọc)](ports/CHECK_PORTS.sh)
+- [Sổ port và trạng thái thực tế / đề xuất](ports/PORT_REGISTRY.vi.md)
+- [Registry dạng JSON](ports/registry.json)
+- [Script kiểm tra port không thay đổi hệ thống](ports/CHECK_PORTS.sh)
+- [Hướng dẫn cài trên Android](ports/SETUP_ANDROID_OSINT_5.vi.md)
 
-**Nguyên tắc**: Mọi port trong sổ là *đề xuất/đã giữ chỗ*, không tự động có nghĩa đang chạy. Trước Deploy phải chạy kiểm kê trên **đúng VM/LXC hoặc NAS có Docker**, kiểm tra port đang nghe, các container đã dừng và các service ngoài Docker. Không được đổi port nội bộ của ứng dụng chỉ vì trùng số với container khác: mỗi container có namespace mạng riêng.
+Đã cấu hình trên các fork GitHub: **18894 SpiderFoot, 18895 OpenOSINT, 18896 Maigret, 18897 PhoneInfoga, 18898 Social Analyzer**, ứng viên tiếp theo là **18899**.
 
-Dải OSINT ưu tiên sau yêu cầu mới: **18994–18998**. SpiderFoot 18994 đã sửa trên GitHub, cần Update Stack đang chạy; OpenOSINT/Maigret/PhoneInfoga/Social Analyzer mới giữ chỗ 18995–18998, chưa sửa fork cho đến khi xử lý từng ứng dụng. Dải 290xx tạm ngừng cấp mới. Không kết luận port trống khi chưa kiểm tra Docker host.
+Quy tắc: mặc định mapping gateway **N:N** và backend nghe port N bên trong Docker, không publish port khác. **Không tuyên bố port còn trống** nếu chưa có lệnh kiểm tra trực tiếp trên đúng Docker endpoint. Ảnh cũ SpiderFoot đang dùng `5001:5001`; phải update Stack hiện có để thay đổi, không xóa volume hoặc tạo Stack trùng. Tránh ghi IP LAN thật, mật khẩu, account hoặc token trong repository công khai.
