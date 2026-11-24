@@ -4,89 +4,92 @@
   "scope": "Planning register only; no direct access to user's Docker host",
   "safety": "Never publish secrets, actual LAN addresses, account names or hostnames in this public repository",
   "rules": [
-    "Port conflicts must match the same Docker host + bound interface + protocol + host port; 0.0.0.0 also covers all interfaces",
-    "Container-side ports are isolated by Docker networks; do not change internal service ports unnecessarily",
-    "Never claim a port is available until listeners, Docker bindings (including stopped containers), and firewall/network are inspected at the actual target host",
-    "Never automatically deploy containers or change network/firewall configuration without explicit confirmation",
-    "When assigning a new port, select the next unassigned candidate from the category range, verify actual host availability, update this registry and each affected fork",
-    "Use default branches for mobile Portainer Git stacks: SpiderFoot master, OpenOSINT main, Maigret main, PhoneInfoga master, Social Analyzer main",
-    "2026-11-24: User prefers host 18994-18998 for five OSINT apps. Update one fork at a time when troubleshooting to avoid unexpected GitOps redeploy of installed apps. SpiderFoot switched to 18994; others remain at existing repo ports until individually updated."
+    "User's last reported occupied host port: 18893 for Synaplan Lite (previous access successful); do not reinterpret as 18993 Stirling-PDF.",
+    "New OSINT allocation sequence: SpiderFoot 18894, OpenOSINT 18895, Maigret 18896, PhoneInfoga 18897, Social Analyzer 18898; next candidate 18899.",
+    "For each OSINT Portainer Compose, published gateway port mapping is N:N, backend listens N inside Docker private network, and no 5001 must remain in active Compose mappings.",
+    "The same port can be reused in isolated Docker namespaces/other hosts, but conflicts arise on the same host and interface/protocol.",
+    "Never assert availability without checking live ss -lntup and Docker HostConfig.PortBindings for active and stopped containers on target VM/LXC.",
+    "Existing SpiderFoot from user's Portainer screenshot is still 5001:5001 until redeployed; GitHub changes alone cannot alter containers.",
+    "Do not automatically deploy/redeploy/change firewall/delete existing containers or volumes without explicit user action.",
+    "No secrets, personal account names, actual private host IPs or research results should be committed to the public GitHub port registry."
   ],
   "ranges": [
     {
-      "purpose": "legacy_OSINT_range_290xx_do_not_assign_to_new_apps_until_confirmed",
-      "start": 29001,
-      "end": 29099,
-      "next_candidate": 29006
+      "purpose": "OSINT sequential candidate ports",
+      "start": 18894,
+      "end": 18899,
+      "next_candidate": 18899,
+      "note": "18894-18898 allocated in forks. Next 18899 only a candidate pending direct Docker check"
     },
     {
-      "purpose": "future_web_apps",
-      "start": 29100,
-      "end": 29999,
-      "next_candidate": 29100
+      "purpose": "Legacy alternate range, no longer active allocation",
+      "start": 29001,
+      "end": 29099,
+      "next_candidate": null,
+      "note": "Do not use 290xx for new OSINT deployments unless user instructs otherwise"
     }
   ],
   "allocations": [
     {
       "service": "SpiderFoot",
-      "host_port": 18994,
-      "container_port": 18994,
+      "host_port": 18894,
+      "container_port": 18894,
       "protocol": "TCP",
-      "bind": "LAN_IP set manually in Portainer",
+      "bind": "LAN_IP must be entered by user in Portainer",
       "repository": "hoangthang0106/spiderfoot",
       "branch": "main",
       "compose_path": "docker-compose.yml",
-      "state": "COMMITTED_TO_FORK_NOT_DEPLOY_VERIFIED",
-      "notes": "24/11/2026 screenshot: Portainer currently running spiderfoot image published 5001:5001 from original docker-compose.yml. Fork master/main docker-compose.yml and Dockerfile changed to 18994, data volume spiderfoot-data retained, Caddy gateway auth; user must update existing Stack; port 18994 not host-verified. 29001 superseded.",
+      "state": "EXISTING_RUNNING_5001_5001_PENDING_REDEPLOY",
+      "notes": "Screenshot confirms old running 5001:5001. New fork root Compose uses 18894 on SpiderFoot and gateway, preserving existing spiderfoot-data volume and local spiderfoot:latest image. User must update existing Stack; new host port NOT checked live.",
       "alternate_branch": "master"
     },
     {
       "service": "OpenOSINT",
-      "host_port": 29002,
-      "container_port": 8080,
+      "host_port": 18895,
+      "container_port": 18895,
       "protocol": "TCP",
-      "bind": "LAN_IP set manually in Portainer",
+      "bind": "LAN_IP must be entered by user in Portainer",
       "repository": "hoangthang0106/OpenOSINT",
       "branch": "main",
-      "compose_path": "portainer-compose.yml",
-      "state": "RESERVED_UNVERIFIED",
-      "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
+      "compose_path": "docker-compose.yml",
+      "state": "FORK_UPDATED_NOT_LIVE_VERIFIED",
+      "notes": "Code in fork updated for sequential LAN mapping, no evidence live deployed or port available. App backend and Caddy gateway now listen on same designated port; user must check host availability before deploy."
     },
     {
       "service": "Maigret Web",
-      "host_port": 29003,
-      "container_port": 5000,
+      "host_port": 18896,
+      "container_port": 18896,
       "protocol": "TCP",
-      "bind": "LAN_IP set manually in Portainer",
+      "bind": "LAN_IP must be entered by user in Portainer",
       "repository": "hoangthang0106/maigret",
       "branch": "main",
-      "compose_path": "portainer-compose.yml",
-      "state": "RESERVED_UNVERIFIED",
-      "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
+      "compose_path": "docker-compose.yml",
+      "state": "FORK_UPDATED_NOT_LIVE_VERIFIED",
+      "notes": "Code in fork updated for sequential LAN mapping, no evidence live deployed or port available. App backend and Caddy gateway now listen on same designated port; user must check host availability before deploy."
     },
     {
       "service": "PhoneInfoga",
-      "host_port": 29004,
-      "container_port": 5000,
+      "host_port": 18897,
+      "container_port": 18897,
       "protocol": "TCP",
-      "bind": "LAN_IP set manually in Portainer",
+      "bind": "LAN_IP must be entered by user in Portainer",
       "repository": "hoangthang0106/phoneinfoga",
       "branch": "master",
-      "compose_path": "portainer-compose.yml",
-      "state": "RESERVED_UNVERIFIED",
-      "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
+      "compose_path": "docker-compose.yml",
+      "state": "FORK_UPDATED_NOT_LIVE_VERIFIED",
+      "notes": "Code in fork updated for sequential LAN mapping, no evidence live deployed or port available. App backend and Caddy gateway now listen on same designated port; user must check host availability before deploy."
     },
     {
       "service": "Social Analyzer",
-      "host_port": 29005,
-      "container_port": 9005,
+      "host_port": 18898,
+      "container_port": 18898,
       "protocol": "TCP",
-      "bind": "LAN_IP set manually in Portainer",
+      "bind": "LAN_IP must be entered by user in Portainer",
       "repository": "hoangthang0106/social-analyzer",
       "branch": "main",
-      "compose_path": "portainer-compose.yml",
-      "state": "RESERVED_UNVERIFIED",
-      "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
+      "compose_path": "docker-compose.yml",
+      "state": "FORK_UPDATED_NOT_LIVE_VERIFIED",
+      "notes": "Code in fork updated for sequential LAN mapping, no evidence live deployed or port available. App backend and Caddy gateway now listen on same designated port; user must check host availability before deploy."
     }
   ],
   "historical_records": [
@@ -128,35 +131,35 @@
     {
       "port": 18994,
       "service": "SpiderFoot",
-      "state": "fork_config_committed_18994_pending_live_redeploy",
+      "state": "superseded_previous_candidate_do_not_treat_as_current",
       "protocol": "TCP",
       "host": "unspecified; distinguish Proxmox, VM/LXC, NAS"
     },
     {
       "port": 18995,
       "service": "OpenOSINT old plan",
-      "state": "replaced_do_not_reassign_until_checked",
+      "state": "superseded_previous_candidate_do_not_treat_as_current",
       "protocol": "TCP",
       "host": "unspecified; distinguish Proxmox, VM/LXC, NAS"
     },
     {
       "port": 18996,
       "service": "Maigret old plan",
-      "state": "replaced_do_not_reassign_until_checked",
+      "state": "superseded_previous_candidate_do_not_treat_as_current",
       "protocol": "TCP",
       "host": "unspecified; distinguish Proxmox, VM/LXC, NAS"
     },
     {
       "port": 18997,
       "service": "PhoneInfoga old plan",
-      "state": "replaced_do_not_reassign_until_checked",
+      "state": "superseded_previous_candidate_do_not_treat_as_current",
       "protocol": "TCP",
       "host": "unspecified; distinguish Proxmox, VM/LXC, NAS"
     },
     {
       "port": 18998,
       "service": "Social Analyzer old plan",
-      "state": "replaced_do_not_reassign_until_checked",
+      "state": "superseded_previous_candidate_do_not_treat_as_current",
       "protocol": "TCP",
       "host": "unspecified; distinguish Proxmox, VM/LXC, NAS"
     },
@@ -205,44 +208,53 @@
     {
       "port": 29001,
       "service": "SpiderFoot previous Git plan",
-      "state": "superseded_by_18994_portainer_redeploy_pending",
+      "state": "superseded_previous_candidate_do_not_treat_as_current",
       "protocol": "TCP",
       "host": "unspecified"
+    },
+    {
+      "port": 18893,
+      "service": "Synaplan Lite",
+      "state": "user_reported_installed_and_accessed_2026_11_18",
+      "protocol": "TCP",
+      "host": "user Docker VM/LXC, not reverified live on 2026-11-24"
     }
   ],
   "preferred_port_plan": {
-    "requested": "return to 1899x host ports and avoid 5000/5001, 29001-29005 for new OSINT deployments",
+    "requested": "After actual last used 18893, allocate 18894/18895/18896/18897/18898 and use the same port on both published mapping sides (avoid 5001 and unrelated 5xxx/8080/9005 values in Portainer Compose)",
     "last_updated": "2026-11-24",
-    "status": "SpiderFoot updated only; remaining apps not altered to avoid unexpected auto redeploy",
+    "status": "FORK_FILES_UPDATED_ONLY_NO_LIVE_DEPLOYMENT_VERIFICATION",
+    "next_candidate": 18899,
     "planned": [
       {
         "service": "SpiderFoot",
-        "port": 18994,
-        "repo_status": "edited_fork_pending_live_update"
+        "host_port": 18894,
+        "container_port": 18894,
+        "state": "configured_not_host_verified"
       },
       {
         "service": "OpenOSINT",
-        "port": 18995,
-        "repo_status": "pending_individual_update",
-        "current_fork_port": 29002
+        "host_port": 18895,
+        "container_port": 18895,
+        "state": "configured_not_host_verified"
       },
       {
         "service": "Maigret Web",
-        "port": 18996,
-        "repo_status": "pending_individual_update",
-        "current_fork_port": 29003
+        "host_port": 18896,
+        "container_port": 18896,
+        "state": "configured_not_host_verified"
       },
       {
         "service": "PhoneInfoga",
-        "port": 18997,
-        "repo_status": "pending_individual_update",
-        "current_fork_port": 29004
+        "host_port": 18897,
+        "container_port": 18897,
+        "state": "configured_not_host_verified"
       },
       {
         "service": "Social Analyzer",
-        "port": 18998,
-        "repo_status": "pending_individual_update",
-        "current_fork_port": 29005
+        "host_port": 18898,
+        "container_port": 18898,
+        "state": "configured_not_host_verified"
       }
     ]
   }
