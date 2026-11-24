@@ -38,6 +38,31 @@ Tất cả file `docker-compose.yml` mặc định và `portainer-compose.yml` t
 
 Dãy 18994–18998 và 29001–29005 là **quy hoạch cũ**, đã bị thay bằng 18894–18898; không tự ý tái cấp khi chưa xem hệ thống thực tế.
 
+## 3A. Kiểm kê từ ảnh Portainer gửi ngày 24/11/2026
+
+**Chỉ ghi những mapping Published Ports nhìn thấy trong ảnh**; không phải lệnh kiểm tra trực tiếp, và không xác nhận trạng thái running cho mọi dòng.
+
+| Dịch vụ | Published Ports (host:container) |
+|---|---|
+| IT Tools | `8181:80` |
+| LibreNMS | `8089:8000` |
+| Mikrodash IT | `13081:3081` |
+| Mini QR | `18285:8080` |
+| Personal Web | `8088:4321` |
+| Portainer | `9443:9443` |
+| QRForge | `18889:8080` |
+| qrframe | `18890:18090` |
+| Immich | `18892:2283` |
+| Synaplan Lite | **`18893:80`** |
+| SpiderFoot (container cũ trong ảnh) | **`5001:5001`** |
+| Stirling-PDF | **`18993:8080`** |
+| Trend app | `8080:8080` |
+| Zabbix Web | `8380:8080` |
+
+`18891` đã được nhắc đến cho n8n nhưng **không có trong các dòng ảnh đã xem**. Port `18993` là Stirling-PDF, hoàn toàn khác với port `18893` của Synaplan. Không được cấp trùng hai port này.
+
+**Điểm cần thao tác:** hình ảnh SpiderFoot vẫn hiển thị `5001:5001`, trong khi file GitHub đã là `18894:18894`. Cần cập nhật Stack đang chạy, giữ nguyên volume, và kiểm tra `18894` trống trên đúng Docker host trước. Đích là `18894:18894` trên container gateway, **không có host-published 5001**.
+
 ## 4. Quy trình khi cài ứng dụng mới
 
 1. Đọc [registry.json](./registry.json) để tìm cổng tiếp theo, từ **18899**.
