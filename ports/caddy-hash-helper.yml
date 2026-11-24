@@ -1,0 +1,11 @@
+# Temporary Caddy hash generator for Portainer Console; no exposed ports.
+# Caddy hashes a password when manually invoked in the Console.
+services:
+  osint-hash-helper:
+    image: caddy:2
+    container_name: osint-hash-helper
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep 86400"]
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
