@@ -8,7 +8,8 @@
     "Container-side ports are isolated by Docker networks; do not change internal service ports unnecessarily",
     "Never claim a port is available until listeners, Docker bindings (including stopped containers), and firewall/network are inspected at the actual target host",
     "Never automatically deploy containers or change network/firewall configuration without explicit confirmation",
-    "When assigning a new port, select the next unassigned candidate from the category range, verify actual host availability, update this registry and each affected fork"
+    "When assigning a new port, select the next unassigned candidate from the category range, verify actual host availability, update this registry and each affected fork",
+    "Use default branches for mobile Portainer Git stacks: SpiderFoot master, OpenOSINT main, Maigret main, PhoneInfoga master, Social Analyzer main"
   ],
   "ranges": [
     {
@@ -32,7 +33,7 @@
       "protocol": "TCP",
       "bind": "LAN_IP set manually in Portainer",
       "repository": "hoangthang0106/spiderfoot",
-      "branch": "portainer-lan",
+      "branch": "master",
       "compose_path": "portainer-compose.yml",
       "state": "RESERVED_UNVERIFIED",
       "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
@@ -44,7 +45,7 @@
       "protocol": "TCP",
       "bind": "LAN_IP set manually in Portainer",
       "repository": "hoangthang0106/OpenOSINT",
-      "branch": "portainer-lan",
+      "branch": "main",
       "compose_path": "portainer-compose.yml",
       "state": "RESERVED_UNVERIFIED",
       "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
@@ -56,7 +57,7 @@
       "protocol": "TCP",
       "bind": "LAN_IP set manually in Portainer",
       "repository": "hoangthang0106/maigret",
-      "branch": "portainer-lan",
+      "branch": "main",
       "compose_path": "portainer-compose.yml",
       "state": "RESERVED_UNVERIFIED",
       "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
@@ -68,7 +69,7 @@
       "protocol": "TCP",
       "bind": "LAN_IP set manually in Portainer",
       "repository": "hoangthang0106/phoneinfoga",
-      "branch": "portainer-lan",
+      "branch": "master",
       "compose_path": "portainer-compose.yml",
       "state": "RESERVED_UNVERIFIED",
       "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
@@ -80,7 +81,7 @@
       "protocol": "TCP",
       "bind": "LAN_IP set manually in Portainer",
       "repository": "hoangthang0106/social-analyzer",
-      "branch": "portainer-lan",
+      "branch": "main",
       "compose_path": "portainer-compose.yml",
       "state": "RESERVED_UNVERIFIED",
       "notes": "Published only by per-stack Caddy gateway; backend service itself has no published host port"
