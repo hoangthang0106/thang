@@ -12,7 +12,7 @@ docker compose ls -a || true
 printf '\n=== TCP/UDP listeners on THIS host ===\n'
 ss -lntup || true
 printf '\n=== Proposed OSINT ports (TCP) and next candidates ===\n'
-for p in 29001 29002 29003 29004 29005 29006 29100; do
+for p in 18994 18995 18996 18997 18998 5001; do
   echo "---- TCP port $p ----"
   ss -H -ltn "( sport = :$p )" || true
 done
