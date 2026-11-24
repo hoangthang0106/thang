@@ -11,7 +11,8 @@
     "Never assert availability without checking live ss -lntup and Docker HostConfig.PortBindings for active and stopped containers on target VM/LXC.",
     "Existing SpiderFoot from user's Portainer screenshot is still 5001:5001 until redeployed; GitHub changes alone cannot alter containers.",
     "Do not automatically deploy/redeploy/change firewall/delete existing containers or volumes without explicit user action.",
-    "No secrets, personal account names, actual private host IPs or research results should be committed to the public GitHub port registry."
+    "No secrets, personal account names, actual private host IPs or research results should be committed to the public GitHub port registry.",
+    "Port allocations must never collide with screenshot-observed host ports; prioritize sequential 18894..18899 and check all visible published ports."
   ],
   "ranges": [
     {
@@ -256,6 +257,137 @@
         "container_port": 18898,
         "state": "configured_not_host_verified"
       }
+    ]
+  },
+  "screenshot_port_inventory": {
+    "observed_date": "2026-11-24",
+    "source": "User supplied Portainer Containers > Published Ports screenshot",
+    "scope": "Visible rows only, Docker host not directly queried; not a complete real-time inventory",
+    "entries": [
+      {
+        "service": "IT Tools",
+        "host_port": 8181,
+        "container_port": 80,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "LibreNMS",
+        "host_port": 8089,
+        "container_port": 8000,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Mikrodash IT",
+        "host_port": 13081,
+        "container_port": 3081,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Mini QR",
+        "host_port": 18285,
+        "container_port": 8080,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Personal Web",
+        "host_port": 8088,
+        "container_port": 4321,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Portainer",
+        "host_port": 9443,
+        "container_port": 9443,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "QRForge",
+        "host_port": 18889,
+        "container_port": 8080,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "qrframe",
+        "host_port": 18890,
+        "container_port": 18090,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Immich",
+        "host_port": 18892,
+        "container_port": 2283,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Synaplan Lite",
+        "host_port": 18893,
+        "container_port": 80,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "SpiderFoot existing",
+        "host_port": 5001,
+        "container_port": 5001,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Stirling-PDF",
+        "host_port": 18993,
+        "container_port": 8080,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Trend app",
+        "host_port": 8080,
+        "container_port": 8080,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      },
+      {
+        "service": "Zabbix Web",
+        "host_port": 8380,
+        "container_port": 8080,
+        "protocol": "TCP",
+        "evidence": "visible_in_user_screenshot",
+        "state": "published_mapping_observed_not_live_rechecked"
+      }
+    ],
+    "reserved_unverified": [
+      {
+        "host_port": 18891,
+        "service": "n8n",
+        "reason": "previously planned; not visible in this screenshot"
+      }
+    ],
+    "notes": [
+      "18893:80 Synaplan Lite is the sequential last port user wants to extend; 18993:8080 Stirling-PDF is also already present, distinct from 18893.",
+      "SpiderFoot currently shows 5001:5001 in screenshot. GitHub configured 18894:18894 but does not alter currently running container.",
+      "Unused in visible screenshot does not mean available; verify host listeners and stopped Docker bindings."
     ]
   }
 }
