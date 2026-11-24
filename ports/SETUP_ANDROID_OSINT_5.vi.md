@@ -1,72 +1,37 @@
-> **CẬP NHẬT CẦN ĐỌC TRƯỚC:** Ảnh mới nhất cho thấy SpiderFoot hiện chạy `5001:5001`. Fork đã sửa `docker-compose.yml` sang host/internal **18994** và cần cập nhật **Stack đang tồn tại** để áp dụng, không tạo Stack trùng. Hướng dẫn: https://github.com/hoangthang0106/spiderfoot/blob/main/PORTAINER_FIX_PORT_18994.vi.md. Các app 2–5 **chưa đổi** khỏi 29002–29005 trên GitHub, vì người dùng yêu cầu sửa từng app, dự kiến sau này là 18995–18998. Kiểm tra cổng thực tế trước.
+# HƯỚNG DẪN CÀI OSINT BẰNG ĐIỆN THOẠI — DÃY PORT 18894–18898
 
-# HƯỚNG DẪN ANDROID — CÀI 5 OSINT WEB QUA PORTAINER
+*Mốc đã dùng gần nhất: 18893 — Synaplan Lite. Mọi giá trị mới chỉ là cấu hình GitHub, không xác nhận Docker host đang trống.*
 
-*Cập nhật 24/11/2026. Các file Git đã chuẩn bị; chưa xác minh IP/port thực tế, chưa chạy ứng dụng trên máy.*
+## A. Chuẩn bị chung
 
-## A. Chọn đúng Docker host, kiểm tra port
+1. Trên Android mở **Portainer → Environments**, chọn đúng VM/LXC Docker.
+2. Trước Deploy, kiểm tra host port trong [CHECK_PORTS.sh](./CHECK_PORTS.sh), hoặc bằng `ss -ltnp`, `docker ps -a` và `docker inspect HostConfig.PortBindings`.
+3. Mỗi Stack nhập Environment variables `LAN_IP` (IP LAN của đúng Docker VM/LXC), `OSINT_AUTH_USER` (tự đặt), `OSINT_AUTH_PASSWORD` (mật khẩu mạnh tự đặt). **Không cần bcrypt hash; không commit bí mật vào GitHub**.
+4. Git repository là public → Authentication `None`. Trong giai đoạn thử, không bật GitOps auto-update.
+5. Nhánh mặc định và Compose path ở bảng dưới. **Không chọn file Compose cũ, không copy lệnh Docker Run với cổng mặc định 5001/8080**.
 
-1. Chrome Android → Portainer → Environments → chọn đúng Docker endpoint chứa VM/LXC muốn cài.
-2. Chọn Containers để xem đã có Stack/app chưa, Stacks xem các project hiện tại.
-3. **Chỉ đọc**, trong Console của đúng VM/LXC trên Proxmox (không phải Proxmox host), chạy:
+## B. Mỗi ứng dụng — thông tin cần nhập Portainer
 
-```bash
-docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
-sudo ss -ltnp
-docker ps -aq | xargs -r docker inspect --format '{{.Name}} {{json .HostConfig.PortBindings}}'
-```
+| Thứ tự | Công cụ | Git repository | Reference | Compose path | Published ports sau khi Deploy |
+|---:|---|---|---|---|---|
+| 1 | SpiderFoot | https://github.com/hoangthang0106/spiderfoot.git | `refs/heads/main` | `docker-compose.yml` | **18894:18894** |
+| 2 | OpenOSINT | https://github.com/hoangthang0106/OpenOSINT.git | `refs/heads/main` | `docker-compose.yml` | **18895:18895** |
+| 3 | Maigret Web | https://github.com/hoangthang0106/maigret.git | `refs/heads/main` | `docker-compose.yml` | **18896:18896** |
+| 4 | PhoneInfoga | https://github.com/hoangthang0106/phoneinfoga.git | `refs/heads/master` | `docker-compose.yml` | **18897:18897** |
+| 5 | Social Analyzer | https://github.com/hoangthang0106/social-analyzer.git | `refs/heads/main` | `docker-compose.yml` | **18898:18898** |
 
-Chỉ tiếp tục nếu cổng 18994–29005 được xác minh còn trống. Các cổng đã giữ chỗ trong [Sổ port](./PORT_REGISTRY.vi.md), không phải bằng chứng đang chạy.
+- **1. SpiderFoot:** đang có Stack `spiderfoot` từ trước, ảnh Portainer vẫn chạy `5001:5001`; **update Stack hiện có** và giữ nguyên volume `spiderfoot-data`, không tạo Stack thứ hai. Compose mới dùng image local `spiderfoot:latest` không cần build; không bật Pull image.
+- **2. OpenOSINT:** dùng API/Web UI + Holehe/Sherlock. Có `build:`; nếu Agent/remote không build được, dùng phương án build tại đúng Docker host rồi dùng `portainer-image-only.yml`, **không dùng image-only nếu chưa build**.
+- **3. Maigret Web:** chủ yếu tìm hồ sơ công khai theo username; image `soxoj/maigret:web`, đặt `PORT=18896`, không cần build.
+- **4. PhoneInfoga:** tìm dữ liệu công khai về số điện thoại; image `sundowndev/phoneinfoga:latest`, dùng `serve --port 18897`, không cần build.
+- **5. Social Analyzer:** tìm hồ sơ theo username, dùng `PORT=18898`, bản mobile không kèm Selenium Grid; cần build Node 22, URL có đuôi `/app.html`.
 
-## B. Mật khẩu tự chọn — không cần băm hash
+## C. Sau khi Deploy
 
-Từng Stack yêu cầu `OSINT_AUTH_USER` (tên đăng nhập) và `OSINT_AUTH_PASSWORD` (mật khẩu mạnh **tự nhập bằng Portainer**). Container Caddy gateway sẽ tự băm mật khẩu khi khởi động. Không cần Stack `osint-hash-helper`, không cần tạo/dán hash. Bạn chỉ cần nhập mật khẩu tự chọn vào biến `OSINT_AUTH_PASSWORD` trong Portainer; không lưu mật khẩu vào GitHub. Người quản trị Portainer/Docker có thể xem biến môi trường. Nên truy cập qua LAN tin cậy/VPN hoặc HTTPS nội bộ vì HTTP Basic Auth chưa mã hóa đường truyền.
+- Mở **Portainer → Stacks → đúng Stack → Containers**. Cần thấy app và gateway chạy; trong **Published Ports** phải hiển thị **1889N:1889N** trên gateway, không có host publish cổng app khác.
+- Đăng nhập qua `http://LAN_IP:18894`, `http://LAN_IP:18895`, `http://LAN_IP:18896`, `http://LAN_IP:18897`, hoặc `http://LAN_IP:18898/app.html`.
+- Nếu `reference not found`: kiểm tra repository/ref/path. Nếu `port is already allocated`: dừng thao tác triển khai, kiểm tra host, không xóa Stack khác. Nếu `502`: xem logs app và Caddy. Nếu lỗi `build`: xử lý build riêng, không chữa bằng đổi port.
+- Chỉ sau khi bạn thấy Running và port đúng mới cập nhật trạng thái thực tế ở sổ GitHub. **Ứng viên cổng tiếp theo là 18899**, phải kiểm tra host trước.
+- Basic Auth qua HTTP không mã hóa; chỉ dùng LAN tin cậy, không NAT ra Internet hoặc cấu hình HTTPS nội bộ.
 
-## C. Cài 5 Stack theo thứ tự
-
-Dùng thao tác giống nhau cho mỗi app:
-
-Portainer → Stacks → Add stack → Repository. Nhập Name và Repo trong bảng. **Chọn nhánh mặc định của từng fork:** SpiderFoot **`refs/heads/main`** (đã tạo thêm để sửa lỗi reference not found), OpenOSINT **`refs/heads/main`**, Maigret **`refs/heads/main`**, PhoneInfoga **`refs/heads/master`**, Social Analyzer **`refs/heads/main`**. Cả 5 đều dùng Compose path **`portainer-compose.yml`**. Kéo xuống Environment variables và thêm ba dòng:
-- `LAN_IP` = IP thực của VM/LXC Docker
-- `OSINT_AUTH_USER` = tên tài khoản muốn dùng để mở website, ví dụ `itadmin`
-- `OSINT_AUTH_PASSWORD` = mật khẩu mạnh tự chọn
-
-Không cần thêm biến port nếu dùng mặc định, nhưng **phải xác minh port đó trống trước**. Chỉ khi đủ mới Deploy.
-
-| Thứ tự | Stack name | Fork repo | Port mặc định | Công dụng |
-|---|---|---|---:|---|
-| 1 | `osint-spiderfoot` | `https://github.com/hoangthang0106/spiderfoot` | 18994 | Tra cứu OSINT đa nguồn email/username/phone/domain/IP; xem liên kết dữ liệu |
-| 2 | `osint-openosint` | `https://github.com/hoangthang0106/OpenOSINT` | 29002 | Chat/web điều tra, Holehe (email) + Sherlock (username); PhoneInfoga chưa có sẵn trong Dockerfile |
-| 3 | `osint-maigret` | `https://github.com/hoangthang0106/maigret` | 29003 | Tìm hồ sơ công khai theo username và xuất báo cáo |
-| 4 | `osint-phoneinfoga` | `https://github.com/hoangthang0106/phoneinfoga` | 29004 | Tra cứu metadata số điện thoại và dấu vết công khai |
-| 5 | `osint-social-analyzer` | `https://github.com/hoangthang0106/social-analyzer` | 29005 | Tìm/phân tích profile mạng xã hội theo username |
-
-Với ứng dụng 1, 2, 5 có `build:`. Nếu Portainer báo lỗi build image từ Git: xem hướng dẫn **Phương án B** trong `PORTAINER.vi.md` từng fork, cần build trên Docker endpoint đúng và đổi Compose path sang `portainer-image-only.yml`. Không chuyển sang Compose image-only trước khi có image đã build.
-
-Ứng dụng 3 và 4 dùng image dựng sẵn, phù hợp nhất để kiểm tra quy trình lần đầu trên điện thoại; nhưng thứ tự quy hoạch vẫn là 1→5.
-
-## D. Kiểm tra sau khi cài từng cái
-
-1. Portainer → Stacks → Stack vừa tạo → Containers: kiểm tra app và gateway đang Running.
-2. Logs → xem error, lỗi cấu hình, pull image, build, database, memory.
-3. Trên Android cùng LAN: mở `http://LAN_IP:18994`, sau đó các cổng 29002, 29003, 29004; riêng **Social Analyzer** dùng `http://LAN_IP:29005/app.html`.
-4. Trình duyệt yêu cầu Basic Auth: `OSINT_AUTH_USER` và **mật khẩu đã đặt**.
-5. Nếu có `502 Bad Gateway`, gateway đang chạy nhưng backend chưa sẵn sàng hoặc không kết nối được — xem Logs backend. Nếu `connection refused`, kiểm tra IP/port và gateway. Nếu Docker báo `port is already allocated`, dừng, kiểm kê lại host port; **không stop/xóa ứng dụng khác**.
-6. Khi hoạt động, ghi trạng thái *đã xác minh/đã cài* vào sổ nội bộ; chỉ ghi thông tin không nhạy cảm lên GitHub công khai.
-
-## E. Link từng hướng dẫn đầy đủ
-
-1. https://github.com/hoangthang0106/spiderfoot/blob/main/PORTAINER.vi.md
-2. https://github.com/hoangthang0106/OpenOSINT/blob/main/PORTAINER.vi.md
-3. https://github.com/hoangthang0106/maigret/blob/main/PORTAINER.vi.md
-4. https://github.com/hoangthang0106/phoneinfoga/blob/master/PORTAINER.vi.md
-5. https://github.com/hoangthang0106/social-analyzer/blob/main/PORTAINER.vi.md
-
-**An toàn:** Dùng với thông tin sở hữu hoặc có ủy quyền, không lạm dụng quét tài khoản người khác. Các nguồn công khai có thể thiếu/sai; không dịch vụ nào chứng minh được tất cả tài khoản từng đăng ký bằng một email/số điện thoại.
-
-## Khắc phục riêng lỗi Git SpiderFoot ngày 24/11/2026
-
-- Portainer báo `reference not found` khi Sync nguồn Git: tham chiếu `main` có thể chưa tồn tại. Đã tạo `refs/heads/main` trên fork, vẫn giữ `master`.
-- Dùng `https://github.com/hoangthang0106/spiderfoot.git`, `refs/heads/main`, `portainer-compose.yml`.
-- Hướng dẫn từng bước: https://github.com/hoangthang0106/spiderfoot/blob/main/PORTAINER_FIX_GIT_ANDROID.vi.md
-- Chưa xác nhận Docker đã clone / build / chạy thành công; cổng 18994 chưa xác minh trên host thật.
+Chi tiết từng fork: [Sổ port](./PORT_REGISTRY.vi.md).
