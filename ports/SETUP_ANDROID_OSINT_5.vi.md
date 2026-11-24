@@ -24,7 +24,7 @@ Từng Stack yêu cầu `OSINT_AUTH_USER` (tên đăng nhập) và `OSINT_AUTH_P
 
 Dùng thao tác giống nhau cho mỗi app:
 
-Portainer → Stacks → Add stack → Repository. Nhập Name và Repo trong bảng. Với **SpiderFoot**, dùng **`refs/heads/master`**; 4 ứng dụng còn lại dùng **`refs/heads/portainer-lan`**. Cả 5 đều dùng Compose path **`portainer-compose.yml`**. Kéo xuống Environment variables và thêm ba dòng:
+Portainer → Stacks → Add stack → Repository. Nhập Name và Repo trong bảng. **Chọn nhánh mặc định của từng fork:** SpiderFoot **`refs/heads/master`**, OpenOSINT **`refs/heads/main`**, Maigret **`refs/heads/main`**, PhoneInfoga **`refs/heads/master`**, Social Analyzer **`refs/heads/main`**. Cả 5 đều dùng Compose path **`portainer-compose.yml`**. Kéo xuống Environment variables và thêm ba dòng:
 - `LAN_IP` = IP thực của VM/LXC Docker
 - `OSINT_AUTH_USER` = tên tài khoản muốn dùng để mở website, ví dụ `itadmin`
 - `OSINT_AUTH_PASSWORD` = mật khẩu mạnh tự chọn
@@ -54,10 +54,10 @@ Với ứng dụng 1, 2, 5 có `build:`. Nếu Portainer báo lỗi build image 
 
 ## E. Link từng hướng dẫn đầy đủ
 
-1. https://github.com/hoangthang0106/spiderfoot/blob/portainer-lan/PORTAINER.vi.md
-2. https://github.com/hoangthang0106/OpenOSINT/blob/portainer-lan/PORTAINER.vi.md
-3. https://github.com/hoangthang0106/maigret/blob/portainer-lan/PORTAINER.vi.md
-4. https://github.com/hoangthang0106/phoneinfoga/blob/portainer-lan/PORTAINER.vi.md
-5. https://github.com/hoangthang0106/social-analyzer/blob/portainer-lan/PORTAINER.vi.md
+1. https://github.com/hoangthang0106/spiderfoot/blob/master/PORTAINER.vi.md
+2. https://github.com/hoangthang0106/OpenOSINT/blob/main/PORTAINER.vi.md
+3. https://github.com/hoangthang0106/maigret/blob/main/PORTAINER.vi.md
+4. https://github.com/hoangthang0106/phoneinfoga/blob/master/PORTAINER.vi.md
+5. https://github.com/hoangthang0106/social-analyzer/blob/main/PORTAINER.vi.md
 
 **An toàn:** Dùng với thông tin sở hữu hoặc có ủy quyền, không lạm dụng quét tài khoản người khác. Các nguồn công khai có thể thiếu/sai; không dịch vụ nào chứng minh được tất cả tài khoản từng đăng ký bằng một email/số điện thoại.
