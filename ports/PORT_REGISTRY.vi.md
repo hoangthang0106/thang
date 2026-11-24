@@ -1,10 +1,12 @@
+> **CẬP NHẬT 24/11/2026 — SpiderFoot:** ảnh Portainer xác nhận container hiện tại đang publish `5001:5001`; GitHub fork đã sửa `docker-compose.yml` và `Dockerfile` sang **18994** trên `master`/`main`, giữ tên volume `spiderfoot-data`, nhưng **chưa cập nhật Stack đang chạy** và chưa xác minh 18994 trống trên host. Ưu tiên file [Hướng dẫn sửa 18994](https://github.com/hoangthang0106/spiderfoot/blob/main/PORTAINER_FIX_PORT_18994.vi.md). **18995–18998** được ghi là *nguyện vọng chuyển sang dải cũ*, 4 fork còn lại chưa sửa, tránh bất ngờ redeploy qua GitOps. Không sử dụng thêm dải 290xx khi chưa hỏi lại.
+
 # SỔ ĐĂNG KÝ PORT — IT-MANAGER
 
 *Cập nhật: 24/11/2026. Dữ liệu dựa trên cấu hình đã trao đổi và các fork GitHub. **Không phải kết quả kiểm tra máy Docker đang chạy**.*
 
 ## Dải port quy hoạch
 
-- **29001–29099**: dành riêng cho công cụ OSINT; số tiếp theo đề xuất **29006**.
+- **29001–29099**: dành riêng cho công cụ OSINT; số tiếp theo đề xuất **đợi xác nhận cổng**.
 - **29100–29999**: dành cho những ứng dụng web/Docker cài tiếp theo; số đầu tiên đề xuất **29100**.
 - **18889–18998**: dải cũ từng trao đổi, **không cấp lại** khi chưa kiểm kê thiết bị thực tế.
 - Port **nội bộ container không cần duy nhất toàn hệ thống**: ứng dụng trong mỗi container có network namespace riêng.
@@ -13,7 +15,7 @@
 
 | Ứng dụng | Host TCP | Nội bộ container | Fork GitHub | Trạng thái |
 |---|---:|---:|---|---|
-| SpiderFoot | **29001** | 5001 | [hoangthang0106/spiderfoot](https://github.com/hoangthang0106/spiderfoot/tree/portainer-lan) | Giữ chỗ, chưa xác minh đang chạy |
+| SpiderFoot | **18994** | 18994 | [hoangthang0106/spiderfoot](https://github.com/hoangthang0106/spiderfoot/tree/portainer-lan) | Giữ chỗ, chưa xác minh đang chạy |
 | OpenOSINT | **29002** | 8080 | [hoangthang0106/OpenOSINT](https://github.com/hoangthang0106/OpenOSINT/tree/portainer-lan) | Giữ chỗ, chưa xác minh đang chạy |
 | Maigret Web | **29003** | 5000 | [hoangthang0106/maigret](https://github.com/hoangthang0106/maigret/tree/portainer-lan) | Giữ chỗ, chưa xác minh đang chạy |
 | PhoneInfoga | **29004** | 5000 | [hoangthang0106/phoneinfoga](https://github.com/hoangthang0106/phoneinfoga/tree/portainer-lan) | Giữ chỗ, chưa xác minh đang chạy |
