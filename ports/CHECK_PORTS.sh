@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
-# IT-MANAGER / read-only inventory for the current Docker host.
-# NO deploy / stop / delete / firewall change / external scan.
+# IT-MANAGER: read-only host port inventory, run on the exact Docker VM/LXC.
+# No changes, no container lifecycle actions or firewall modifications.
 set -u
-printf '\n=== Hostname and local IP addresses ===\n'
+echo '=== Local IP/interface ==='
 hostname || true
 ip -br address || true
-printf '\n=== All Docker containers including stopped ===\n'
+echo '=== All containers, including stopped ==='
 docker ps -a --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}' || true
-printf '\n=== Docker Compose projects ===\n'
-docker compose ls -a || true
-printf '\n=== TCP/UDP listeners on THIS host ===\n'
+echo '=== Host TCP/UDP listeners ==='
 ss -lntup || true
-printf '\n=== Proposed OSINT ports (TCP) and next candidates ===\n'
-for p in 18994 18995 18996 18997 18998 5001; do
-  echo "---- TCP port $p ----"
+echo '=== Last-known / sequential OSINT TCP candidates ==='
+for p in 18893 18894 18895 18896 18897 18898 18899 5001; do
+  echo "--- TCP $p ---"
   ss -H -ltn "( sport = :$p )" || true
 done
-printf '\n=== Published port reservations, including stopped containers ===\n'
+echo '=== Port bindings including stopped Docker containers ==='
 docker ps -aq | xargs -r docker inspect --format '{{.Name}} {{json .HostConfig.PortBindings}}' || true
-printf '\nRead-only inventory complete. No listener does NOT guarantee the port stays free.\n'
+echo 'Read-only inventory complete. No listener does not reserve a port.'
