@@ -18,7 +18,7 @@ Chỉ tiếp tục nếu cổng 29001–29005 được xác minh còn trống. C
 
 ## B. Mật khẩu tự chọn — không cần băm hash
 
-Từng Stack yêu cầu `OSINT_AUTH_USER` (tên đăng nhập) và `OSINT_AUTH_PASSWORD` (mật khẩu mạnh **tự nhập bằng Portainer**). Container Caddy gateway sẽ tự băm mật khẩu khi khởi động. Không cần Stack `osint-hash-helper`, không cần dán mật khẩu và không lưu mật khẩu vào GitHub. Người quản trị Portainer/Docker có thể xem biến môi trường. Nên truy cập qua LAN tin cậy/VPN hoặc HTTPS nội bộ vì HTTP Basic Auth chưa mã hóa đường truyền.
+Từng Stack yêu cầu `OSINT_AUTH_USER` (tên đăng nhập) và `OSINT_AUTH_PASSWORD` (mật khẩu mạnh **tự nhập bằng Portainer**). Container Caddy gateway sẽ tự băm mật khẩu khi khởi động. Không cần Stack `osint-hash-helper`, không cần tạo/dán hash. Bạn chỉ cần nhập mật khẩu tự chọn vào biến `OSINT_AUTH_PASSWORD` trong Portainer; không lưu mật khẩu vào GitHub. Người quản trị Portainer/Docker có thể xem biến môi trường. Nên truy cập qua LAN tin cậy/VPN hoặc HTTPS nội bộ vì HTTP Basic Auth chưa mã hóa đường truyền.
 
 ## C. Cài 5 Stack theo thứ tự
 
