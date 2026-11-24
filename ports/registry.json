@@ -12,7 +12,8 @@
     "Existing SpiderFoot from user's Portainer screenshot is still 5001:5001 until redeployed; GitHub changes alone cannot alter containers.",
     "Do not automatically deploy/redeploy/change firewall/delete existing containers or volumes without explicit user action.",
     "No secrets, personal account names, actual private host IPs or research results should be committed to the public GitHub port registry.",
-    "Port allocations must never collide with screenshot-observed host ports; prioritize sequential 18894..18899 and check all visible published ports."
+    "Port allocations must never collide with screenshot-observed host ports; prioritize sequential 18894..18899 and check all visible published ports.",
+    "User has not separately installed/requisitioned Caddy: never add any reverse-proxy/gateway container without explicit request. In SpiderFoot use only its native Digest auth; other app forks must be reviewed before future deployment to remove earlier gateway assumptions."
   ],
   "ranges": [
     {
@@ -40,8 +41,8 @@
       "repository": "hoangthang0106/spiderfoot",
       "branch": "main",
       "compose_path": "docker-compose.yml",
-      "state": "EXISTING_RUNNING_5001_5001_PENDING_REDEPLOY",
-      "notes": "Screenshot confirms old running 5001:5001. New fork root Compose uses 18894 on SpiderFoot and gateway, preserving existing spiderfoot-data volume and local spiderfoot:latest image. User must update existing Stack; new host port NOT checked live.",
+      "state": "FORK_SINGLE_CONTAINER_NO_CADDY_PENDING_USER_REDEPLOY",
+      "notes": "Screenshot 2026-11-24: running spiderfoot+spiderfoot-gateway-1 (Caddy unintentionally introduced through earlier Compose). Fork main/master now provides one SpiderFoot service only, native Digest auth via /var/lib/spiderfoot/passwd, published host 18894:18894, preserving volume spiderfoot-data and image spiderfoot:latest. User must explicitly redeploy existing Stack; live port not checked.",
       "alternate_branch": "master"
     },
     {
