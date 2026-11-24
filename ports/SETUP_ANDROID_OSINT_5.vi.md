@@ -16,29 +16,18 @@ docker ps -aq | xargs -r docker inspect --format '{{.Name}} {{json .HostConfig.P
 
 Chỉ tiếp tục nếu cổng 29001–29005 được xác minh còn trống. Các cổng đã giữ chỗ trong [Sổ port](./PORT_REGISTRY.vi.md), không phải bằng chứng đang chạy.
 
-## B. Tạo bcrypt hash chỉ bằng Portainer
+## B. Mật khẩu tự chọn — không cần băm hash
 
-Cách dễ dùng trên điện thoại (không cần SSH):
-
-1. Portainer → **Stacks → Add stack → Repository**.
-2. Name: `osint-hash-helper`.
-3. Repository URL: `https://github.com/hoangthang0106/thang`.
-4. Reference: `refs/heads/main`. Compose path: `ports/caddy-hash-helper.yml`.
-5. Deploy Stack phụ, không publish bất cứ port nào. Trên **Containers** chọn `osint-hash-helper`, mở **Console** → `/bin/sh` → Connect.
-6. Trong console nhập `caddy hash-password --algorithm bcrypt` rồi Enter, nhập mật khẩu mạnh vào prompt (ký tự không hiện trên console), Enter và sao chép chuỗi bcrypt trả về, ví dụ bắt đầu `$2a$` hoặc `$2b$`.
-7. Dán hash này vào biến `OSINT_AUTH_HASH` của từng Stack OSINT. Khi website hỏi đăng nhập, dùng **mật khẩu gốc**, không phải hash.
-8. Sau khi đã lưu hash an toàn, có thể chủ động xóa Stack phụ không có volume (không xóa nhầm các Stack khác).
-
-**Lưu ý:** Portainer/Docker admin có thể xem giá trị biến môi trường, và Basic Auth trên HTTP chưa mã hóa đường truyền. Giữ trong LAN tin cậy và ưu tiên HTTPS nội bộ.
+Từng Stack yêu cầu `OSINT_AUTH_USER` (tên đăng nhập) và `OSINT_AUTH_PASSWORD` (mật khẩu mạnh **tự nhập bằng Portainer**). Container Caddy gateway sẽ tự băm mật khẩu khi khởi động. Không cần Stack `osint-hash-helper`, không cần dán mật khẩu và không lưu mật khẩu vào GitHub. Người quản trị Portainer/Docker có thể xem biến môi trường. Nên truy cập qua LAN tin cậy/VPN hoặc HTTPS nội bộ vì HTTP Basic Auth chưa mã hóa đường truyền.
 
 ## C. Cài 5 Stack theo thứ tự
 
 Dùng thao tác giống nhau cho mỗi app:
 
-Portainer → Stacks → Add stack → Repository. Nhập Name và Repo trong bảng. Dùng `refs/heads/portainer-lan` cho Reference và `portainer-compose.yml` cho Compose path. Kéo xuống Environment variables và thêm ba dòng:
+Portainer → Stacks → Add stack → Repository. Nhập Name và Repo trong bảng. Với **SpiderFoot**, dùng **`refs/heads/master`**; 4 ứng dụng còn lại dùng **`refs/heads/portainer-lan`**. Cả 5 đều dùng Compose path **`portainer-compose.yml`**. Kéo xuống Environment variables và thêm ba dòng:
 - `LAN_IP` = IP thực của VM/LXC Docker
 - `OSINT_AUTH_USER` = tên tài khoản muốn dùng để mở website, ví dụ `itadmin`
-- `OSINT_AUTH_HASH` = hash từ bước B
+- `OSINT_AUTH_PASSWORD` = mật khẩu mạnh tự chọn
 
 Không cần thêm biến port nếu dùng mặc định, nhưng **phải xác minh port đó trống trước**. Chỉ khi đủ mới Deploy.
 
@@ -59,7 +48,7 @@ Với ứng dụng 1, 2, 5 có `build:`. Nếu Portainer báo lỗi build image 
 1. Portainer → Stacks → Stack vừa tạo → Containers: kiểm tra app và gateway đang Running.
 2. Logs → xem error, lỗi cấu hình, pull image, build, database, memory.
 3. Trên Android cùng LAN: mở `http://LAN_IP:29001`, sau đó các cổng 29002, 29003, 29004; riêng **Social Analyzer** dùng `http://LAN_IP:29005/app.html`.
-4. Trình duyệt yêu cầu Basic Auth: `OSINT_AUTH_USER` và **mật khẩu gốc**.
+4. Trình duyệt yêu cầu Basic Auth: `OSINT_AUTH_USER` và **mật khẩu đã đặt**.
 5. Nếu có `502 Bad Gateway`, gateway đang chạy nhưng backend chưa sẵn sàng hoặc không kết nối được — xem Logs backend. Nếu `connection refused`, kiểm tra IP/port và gateway. Nếu Docker báo `port is already allocated`, dừng, kiểm kê lại host port; **không stop/xóa ứng dụng khác**.
 6. Khi hoạt động, ghi trạng thái *đã xác minh/đã cài* vào sổ nội bộ; chỉ ghi thông tin không nhạy cảm lên GitHub công khai.
 
