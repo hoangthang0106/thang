@@ -131,8 +131,8 @@
       "repository": "hoangthang0106/PerkRadar",
       "branch": "main",
       "compose_path": "docker-compose.yml",
-      "state": "FORK_COMMITTED_NEEDS_IMAGE_BUILD_AND_USER_DEPLOY",
-      "notes": "Repo fork has one-container image-only Compose at host:container 18897:18897, actual PORT=18897 and healthcheck 18897. No upstream prebuilt image officially indicated: build `local/perkradar-itmanager:18897` once from fork source on correct Docker endpoint before deploying Git stack, because Portainer Git Stack may fail build on remote endpoints. Requires >=32 char PERKRADAR_ACCESS_TOKEN; LAN HTTP uses PERKRADAR_SECURE_COOKIE=0; persistent named volume perkradar_data. No Caddy or extra service."
+      "state": "FORK_UPDATED_COMPOSE_AUTOBUILD_PENDING_USER_REDEPLOY",
+      "notes": "On 2026-11-26 screenshot Git Stack commit 8499e1e failed to pull nonexistent local image; root docker-compose.yml is NOW updated to build from fork (build . and pull_policy build). Portainer local Docker endpoint may build with Pull and redeploy; Portainer Agent endpoint may fail build, use docker-compose-prebuilt.yml after building local/perkradar-itmanager:18897 via Images/CLI. One service host:container 18897:18897, PORT=18897, health 18897, token min32, persistent volume."
     }
   ],
   "historical_records": [
