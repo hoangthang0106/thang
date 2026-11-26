@@ -10,18 +10,19 @@
 
 | STT | Ứng dụng | Host:Container đã cấu hình | Fork | Trạng thái |
 |---:|---|---|---|---|
-| 1 | SpiderFoot | **18894:18894/TCP** | [hoangthang0106/spiderfoot](https://github.com/hoangthang0106/spiderfoot/blob/main/docker-compose.yml) | Ảnh Portainer: đang chạy cổng cũ 5001:5001; GitHub đã sửa, cần Update Stack |
+| — | SpiderFoot (đã xóa Portainer theo người dùng) | **18894** có thể tái sử dụng sau khi kiểm tra thực tế | [hoangthang0106/spiderfoot](https://github.com/hoangthang0106/spiderfoot/blob/main/docker-compose.yml) | Người dùng xác nhận đã xóa Stack; fork cũ chưa sửa |
 | 2 | Freebie Radar | **18895:18895/TCP** | [hoangthang0106/freebie-radar](https://github.com/hoangthang0106/freebie-radar/blob/main/docker-compose.yml) | Fork đã sửa 26/11/2026; chưa xác minh triển khai |
 | 3 | Excalidraw | **18896:18896/TCP** | [hoangthang0106/excalidraw](https://github.com/hoangthang0106/excalidraw/blob/master/docker-compose.yml) | Fork đã sửa 26/11/2026; chưa xác minh triển khai |
 | — | Maigret Web (chưa cài xác nhận) | **Chưa cấp cổng mới**; fork cũ đang để 18896 nên có nguy cơ trùng Excalidraw | [hoangthang0106/maigret](https://github.com/hoangthang0106/maigret/blob/main/docker-compose.yml) | Chỉ sửa và cấp lại khi người dùng yêu cầu cài |
-| 4 | PerkRadar | **18897:18897/TCP** | [hoangthang0106/PerkRadar](https://github.com/hoangthang0106/PerkRadar/blob/main/docker-compose.yml) | Fork đã sửa 26/11/2026; cần build image riêng rồi cài Git Stack; chưa xác minh chạy |
+| 4 | NetAlertX | **Web 18897, Backend API 18898** — chế độ host network, không có ports mapping | [hoangthang0106/NetAlertX](https://github.com/hoangthang0106/NetAlertX/blob/main/docker-compose.yml) | GitHub đã chuẩn bị; chưa xác minh đang chạy. Phải bảo vệ 18898 bằng firewall và đặt mật khẩu Web UI |
+| — | PerkRadar (đã xóa Portainer theo người dùng) | **18897 trong fork cũ**, trùng NetAlertX nếu cài lại | [hoangthang0106/PerkRadar](https://github.com/hoangthang0106/PerkRadar/blob/main/docker-compose.yml) | Người dùng xác nhận đã xóa; fork cũ chưa sửa |
 | — | PhoneInfoga (chưa cài xác nhận) | **Chưa cấp cổng mới**; fork cũ vẫn để 18897 nên có nguy cơ trùng PerkRadar | [hoangthang0106/phoneinfoga](https://github.com/hoangthang0106/phoneinfoga/blob/master/docker-compose.yml) | Chỉ cấp lại khi có yêu cầu cài |
-| 5 | Social Analyzer | **18898:18898/TCP** | [hoangthang0106/social-analyzer](https://github.com/hoangthang0106/social-analyzer/blob/main/docker-compose.yml) | Đã sửa fork; chưa xác minh chạy trên Docker |
+| — | Social Analyzer (chưa xác minh cài) | **Fork cũ 18898:18898** — có nguy cơ trùng backend NetAlertX | [hoangthang0106/social-analyzer](https://github.com/hoangthang0106/social-analyzer/blob/main/docker-compose.yml) | Chỉ cấp lại khi có yêu cầu triển khai |
 | — | OpenOSINT (chưa cài xác nhận) | **Chưa cấp cổng mới**; fork cũ đang để 18895 nên xung đột nếu dùng cùng Freebie Radar | [hoangthang0106/OpenOSINT](https://github.com/hoangthang0106/OpenOSINT/blob/main/docker-compose.yml) | Cần cấp lại và sửa fork khi người dùng yêu cầu cài |
 
-Theo yêu cầu, **ưu tiên host port = container port và ứng dụng phải lắng nghe đúng port đó**; Freebie Radar đã chỉnh cả PORT và healthcheck để dùng **18895:18895**. Chỉ dùng cặp port khác số nếu ứng dụng không hỗ trợ đổi cổng và người dùng đồng ý. Không tự thêm Caddy, gateway hay container phụ. Các fork OSINT chuẩn bị trước đây có thể còn dùng cấu hình khác; **không coi đã cài nếu chưa xác minh Portainer**. SpiderFoot đã được sửa fork theo hướng một container, nhưng trạng thái đang chạy chưa xác minh. Excalidraw dùng image chính thức và chỉnh Nginx thực sự nghe port 18896; image này không tự cung cấp storage hoặc collaboration backend. PerkRadar cần build image từ source fork một lần trên Docker endpoint; Portainer Git Stack chỉ deploy image đã build.
+Theo yêu cầu, **ưu tiên host port = container port và ứng dụng phải lắng nghe đúng port đó**. NetAlertX dùng chế độ host network nên cổng ứng dụng chính là cổng host (Web 18897; API 18898), không thêm `ports:` vì Docker không hỗ trợ port publishing ở chế độ này. Chỉ dùng cặp port khác số nếu ứng dụng không hỗ trợ đổi cổng và người dùng đồng ý. Không tự thêm Caddy, gateway hay container phụ. Các fork OSINT chuẩn bị trước đây có thể còn dùng cấu hình khác; **không coi đã cài nếu chưa xác minh Portainer**. SpiderFoot và PerkRadar đã được người dùng xác nhận xóa khỏi Portainer; fork GitHub vẫn còn. NetAlertX bắt buộc host network và sử dụng hai cổng TCP: 18897 cho Web, 18898 cho API; cổng API lắng nghe tất cả giao diện và phải bảo vệ bằng firewall. Excalidraw dùng image chính thức và chỉnh Nginx thực sự nghe port 18896; image này không tự cung cấp storage hoặc collaboration backend. NetAlertX dùng image chính thức GHCR, không cần build. PerkRadar đã xóa khỏi Portainer; nếu sau này triển khai lại thì phải chọn port khác.
 
-**18898** là số tiếp theo *sau PerkRadar 18897*, nhưng cũng là port từng cấu hình trong fork Social Analyzer (chưa xác minh chạy). Khi cài thêm phải kiểm tra Docker host thực tế và thay đổi các kế hoạch chưa triển khai để tránh trùng.
+**18899** là số tiếp theo trên dãy đang cấu hình; cổng **18894** do người dùng đã xóa SpiderFoot cũng có thể dùng lại nếu kiểm tra thực tế trống. NetAlertX đã dùng **18897 (Web) và 18898 (API)**, không dùng mapping N:N vì bắt buộc host network. Khi cài thêm phải kiểm tra Docker host thực tế và thay đổi các kế hoạch chưa triển khai để tránh trùng.
 
 ## 3. Những port khác từng ghi nhận
 
@@ -64,11 +65,11 @@ Dãy 18994–18998 và 29001–29005 là **quy hoạch cũ**, đã bị thay b�
 
 `18891` đã được nhắc đến cho n8n nhưng **không có trong các dòng ảnh đã xem**. Port `18993` là Stirling-PDF, hoàn toàn khác với port `18893` của Synaplan. Không được cấp trùng hai port này.
 
-**Điểm cần thao tác:** hình ảnh SpiderFoot vẫn hiển thị `5001:5001`, trong khi file GitHub đã là `18894:18894`. Cần cập nhật Stack đang chạy, giữ nguyên volume, và kiểm tra `18894` trống trên đúng Docker host trước. Đích trên fork là `18894:18894` trực tiếp trên SpiderFoot (không bắt buộc gateway), **không có host-published 5001**.
+**Cập nhật mới 26/11:** người dùng đã xóa SpiderFoot và PerkRadar khỏi Portainer. Bảng trên ghi lại snapshot cũ để tra cứu lịch sử, **không còn phản ánh hai ứng dụng đang chạy**. Khi dùng lại 18894 hoặc 18897 vẫn phải kiểm tra port trên host.
 
 ## 4. Quy trình khi cài ứng dụng mới
 
-1. Đọc [registry.json](./registry.json) và ưu tiên số tiếp theo sau ứng dụng thực tế, hiện **18898** nếu chưa bị chiếm. Port được ghi trong các fork chưa cài không có nghĩa là đã được dùng; khi thay đổi ưu tiên, cập nhật sổ và cảnh báo Compose cũ trùng.
+1. Đọc [registry.json](./registry.json) và ưu tiên số tiếp theo sau ứng dụng thực tế, hiện **18899** hoặc cổng trống đã thu hồi **18894** sau khi kiểm tra đúng Docker host. Port được ghi trong các fork chưa cài không có nghĩa là đã được dùng; khi thay đổi ưu tiên, cập nhật sổ và cảnh báo Compose cũ trùng.
 2. Trên **đúng VM/LXC/NAS chạy Docker**, dùng [CHECK_PORTS.sh](./CHECK_PORTS.sh) hoặc lệnh đọc `ss -lntup`, `docker ps -a`, `docker inspect HostConfig.PortBindings`. Kiểm tra cả container đã dừng.
 3. Mặc định cấu hình **N:N**, đồng bộ cổng lắng nghe ứng dụng và healthcheck với N, không tự thêm Caddy/gateway. Nếu app không hỗ trợ đổi port nội bộ, giải thích trước khi dùng N:M.
 4. Không được xem việc cập nhật GitHub là đã triển khai. Sau khi Portainer hiện ứng dụng Running và đúng Published Ports, mới cập nhật trạng thái.
