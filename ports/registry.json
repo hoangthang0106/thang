@@ -15,7 +15,8 @@
     "Port allocations must never collide with screenshot-observed host ports; prioritize sequential 18894..18899 and check all visible published ports.",
     "User has not separately installed/requisitioned Caddy: never add any reverse-proxy/gateway container without explicit request. In SpiderFoot use only its native Digest auth; other app forks must be reviewed before future deployment to remove earlier gateway assumptions.",
     "Allocate next host port after last actually deployed service; do not skip host ports merely because other forks have undeployed port plans. When a user installs a different app, update plan and flag any stale Compose conflict in uninstalled forks.",
-    "18895 reassigned to Freebie Radar on user's direct instruction. OpenOSINT's current fork still sets 18895 and conflicts if deployed simultaneously; reassign it upon explicit deployment request."
+    "18895 reassigned to Freebie Radar on user's direct instruction. OpenOSINT's current fork still sets 18895 and conflicts if deployed simultaneously; reassign it upon explicit deployment request.",
+    "User preference for future Docker Portainer installs: host:container port N:N (and actual service listener/healthcheck N), whenever the app can change its listen port; do not use mismatched host:container port unless app cannot be reconfigured and user has agreed."
   ],
   "ranges": [
     {
@@ -98,14 +99,14 @@
     {
       "service": "Freebie Radar",
       "host_port": 18895,
-      "container_port": 8788,
+      "container_port": 18895,
       "protocol": "TCP",
       "bind": "LAN_IP set by user in Portainer",
       "repository": "hoangthang0106/freebie-radar",
       "branch": "main",
       "compose_path": "docker-compose.yml",
       "state": "FORK_COMMITTED_USER_NOT_DEPLOY_VERIFIED",
-      "notes": "User directed use next sequential port after SpiderFoot 18894; no evidence former planned OpenOSINT/Maigret/PhoneInfoga/Social Analyzer deployed. Fork Compose uses one official upstream image, no build, no added gateway. Verify 18895 host port free before deploying."
+      "notes": "User explicitly requested equal host and container port 18895:18895. Fork Compose updated app PORT 18895, published LAN_IP:18895:18895, healthcheck 18895, one radar container, no Caddy/build. Port 18895 may conflict with old undeployed OpenOSINT fork. Running Docker host remains unverified."
     }
   ],
   "historical_records": [
