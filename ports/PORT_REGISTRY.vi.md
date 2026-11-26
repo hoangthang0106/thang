@@ -4,7 +4,7 @@
 
 ## 1. Port cuối cùng người dùng đã xác nhận sử dụng
 
-**18893 — Synaplan Lite**. Theo lịch sử triển khai, người dùng đã cài đặt và truy cập ứng dụng ở host port này; hôm nay tiếp tục xác nhận **18893 là mốc cuối**. **Không suy đoán port nội bộ** của ứng dụng khi chưa có Compose.
+**18893 — Synaplan Lite** là mốc lịch sử cũ của dãy 1889x. Người dùng sau đó đã chạy Excalidraw 18896 và PerkRadar 18897, rồi xác nhận đã xóa SpiderFoot 18894 và PerkRadar 18897. Không dùng mốc 18893 để suy ra port còn trống; phải xem trạng thái Portainer mới nhất và các cổng trên Docker host.
 
 ## 2. Cấp lần lượt từ 18894, chỉ tính ứng dụng triển khai thực tế
 
@@ -16,7 +16,7 @@
 | — | Maigret Web (chưa cài xác nhận) | **Chưa cấp cổng mới**; fork cũ đang để 18896 nên có nguy cơ trùng Excalidraw | [hoangthang0106/maigret](https://github.com/hoangthang0106/maigret/blob/main/docker-compose.yml) | Chỉ sửa và cấp lại khi người dùng yêu cầu cài |
 | 4 | NetAlertX | **Web 18897, Backend API 18898** — chế độ host network, không có ports mapping | [hoangthang0106/NetAlertX](https://github.com/hoangthang0106/NetAlertX/blob/main/docker-compose.yml) | GitHub đã chuẩn bị; chưa xác minh đang chạy. Phải bảo vệ 18898 bằng firewall và đặt mật khẩu Web UI |
 | — | PerkRadar (đã xóa Portainer theo người dùng) | **18897 trong fork cũ**, trùng NetAlertX nếu cài lại | [hoangthang0106/PerkRadar](https://github.com/hoangthang0106/PerkRadar/blob/main/docker-compose.yml) | Người dùng xác nhận đã xóa; fork cũ chưa sửa |
-| — | PhoneInfoga (chưa cài xác nhận) | **Chưa cấp cổng mới**; fork cũ vẫn để 18897 nên có nguy cơ trùng PerkRadar | [hoangthang0106/phoneinfoga](https://github.com/hoangthang0106/phoneinfoga/blob/master/docker-compose.yml) | Chỉ cấp lại khi có yêu cầu cài |
+| — | PhoneInfoga (chưa cài xác nhận) | **Chưa cấp cổng mới**; fork cũ vẫn để 18897 nên có nguy cơ trùng NetAlertX | [hoangthang0106/phoneinfoga](https://github.com/hoangthang0106/phoneinfoga/blob/master/docker-compose.yml) | Chỉ cấp lại khi có yêu cầu cài |
 | — | Social Analyzer (chưa xác minh cài) | **Fork cũ 18898:18898** — có nguy cơ trùng backend NetAlertX | [hoangthang0106/social-analyzer](https://github.com/hoangthang0106/social-analyzer/blob/main/docker-compose.yml) | Chỉ cấp lại khi có yêu cầu triển khai |
 | — | OpenOSINT (chưa cài xác nhận) | **Chưa cấp cổng mới**; fork cũ đang để 18895 nên xung đột nếu dùng cùng Freebie Radar | [hoangthang0106/OpenOSINT](https://github.com/hoangthang0106/OpenOSINT/blob/main/docker-compose.yml) | Cần cấp lại và sửa fork khi người dùng yêu cầu cài |
 
