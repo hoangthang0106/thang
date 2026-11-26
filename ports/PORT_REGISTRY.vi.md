@@ -1,24 +1,25 @@
 # SỔ PORT IT-MANAGER — BẢN DÙNG ĐỂ CẤP PORT MỚI
 
-*Cập nhật ngày 24/11/2026; lưu trữ lâu dài trên GitHub. Không có kết nối trực tiếp tới Portainer/Docker để xác nhận cổng đang trống.*
+*Cập nhật ngày 26/11/2026; lưu trữ lâu dài trên GitHub. Không có kết nối trực tiếp tới Portainer/Docker để xác nhận cổng đang trống.*
 
 ## 1. Port cuối cùng người dùng đã xác nhận sử dụng
 
 **18893 — Synaplan Lite**. Theo lịch sử triển khai, người dùng đã cài đặt và truy cập ứng dụng ở host port này; hôm nay tiếp tục xác nhận **18893 là mốc cuối**. **Không suy đoán port nội bộ** của ứng dụng khi chưa có Compose.
 
-## 2. Cấp lần lượt từ 18894 trở đi
+## 2. Cấp lần lượt từ 18894, chỉ tính ứng dụng triển khai thực tế
 
-| STT | Ứng dụng | Mapping hiển thị ở gateway | Fork | Trạng thái |
+| STT | Ứng dụng | Host:Container đã cấu hình | Fork | Trạng thái |
 |---:|---|---|---|---|
 | 1 | SpiderFoot | **18894:18894/TCP** | [hoangthang0106/spiderfoot](https://github.com/hoangthang0106/spiderfoot/blob/main/docker-compose.yml) | Ảnh Portainer: đang chạy cổng cũ 5001:5001; GitHub đã sửa, cần Update Stack |
-| 2 | OpenOSINT | **18895:18895/TCP** | [hoangthang0106/OpenOSINT](https://github.com/hoangthang0106/OpenOSINT/blob/main/docker-compose.yml) | Đã sửa fork; chưa xác minh chạy trên Docker |
+| 2 | Freebie Radar | **18895:8788/TCP** | [hoangthang0106/freebie-radar](https://github.com/hoangthang0106/freebie-radar/blob/main/docker-compose.yml) | Fork đã sửa 26/11/2026; chưa xác minh triển khai |
 | 3 | Maigret Web | **18896:18896/TCP** | [hoangthang0106/maigret](https://github.com/hoangthang0106/maigret/blob/main/docker-compose.yml) | Đã sửa fork; chưa xác minh chạy trên Docker |
 | 4 | PhoneInfoga | **18897:18897/TCP** | [hoangthang0106/phoneinfoga](https://github.com/hoangthang0106/phoneinfoga/blob/master/docker-compose.yml) | Đã sửa fork; chưa xác minh chạy trên Docker |
 | 5 | Social Analyzer | **18898:18898/TCP** | [hoangthang0106/social-analyzer](https://github.com/hoangthang0106/social-analyzer/blob/main/docker-compose.yml) | Đã sửa fork; chưa xác minh chạy trên Docker |
+| — | OpenOSINT (chưa cài xác nhận) | **Chưa cấp cổng mới**; fork cũ đang để 18895 nên xung đột nếu dùng cùng Freebie Radar | [hoangthang0106/OpenOSINT](https://github.com/hoangthang0106/OpenOSINT/blob/main/docker-compose.yml) | Cần cấp lại và sửa fork khi người dùng yêu cầu cài |
 
-Tất cả file `docker-compose.yml` mặc định và `portainer-compose.yml` trong các fork được chỉnh về dãy trên. **Gateway Caddy** publish `LAN_IP:N:N`; ứng dụng chạy phía sau lắng nghe `N` nhưng **không publish** port host trực tiếp. Không sử dụng 5001, 5000, 8080 hoặc 9005 trong **mapping triển khai OSINT mới**.
+Chỉ cổng host theo thứ tự mới cần tăng tuần tự; cổng nội bộ giữ nguyên nếu ứng dụng dùng cổng khác, ví dụ Freebie Radar **18895:8788**. Không tự thêm Caddy, gateway hay container phụ. Các fork OSINT chuẩn bị trước đây có thể còn dùng cấu hình khác; **không coi đã cài nếu chưa xác minh Portainer**. SpiderFoot đã được sửa fork theo hướng một container, nhưng trạng thái đang chạy chưa xác minh.
 
-**18899** là ứng viên cấp tiếp theo cho ứng dụng mới. Chỉ được coi là port thực sự trống sau khi kiểm tra đúng Docker host.
+**18896** là số tiếp theo *sau ứng dụng thực sự được ưu tiên cài*, nhưng cũng là ứng viên từng cấu hình cho Maigret. Khi cài thêm phải kiểm tra Docker host thực tế và thay đổi các kế hoạch chưa triển khai để tránh trùng.
 
 ## 3. Những port khác từng ghi nhận
 
@@ -61,14 +62,14 @@ Dãy 18994–18998 và 29001–29005 là **quy hoạch cũ**, đã bị thay b�
 
 `18891` đã được nhắc đến cho n8n nhưng **không có trong các dòng ảnh đã xem**. Port `18993` là Stirling-PDF, hoàn toàn khác với port `18893` của Synaplan. Không được cấp trùng hai port này.
 
-**Điểm cần thao tác:** hình ảnh SpiderFoot vẫn hiển thị `5001:5001`, trong khi file GitHub đã là `18894:18894`. Cần cập nhật Stack đang chạy, giữ nguyên volume, và kiểm tra `18894` trống trên đúng Docker host trước. Đích là `18894:18894` trên container gateway, **không có host-published 5001**.
+**Điểm cần thao tác:** hình ảnh SpiderFoot vẫn hiển thị `5001:5001`, trong khi file GitHub đã là `18894:18894`. Cần cập nhật Stack đang chạy, giữ nguyên volume, và kiểm tra `18894` trống trên đúng Docker host trước. Đích trên fork là `18894:18894` trực tiếp trên SpiderFoot (không bắt buộc gateway), **không có host-published 5001**.
 
 ## 4. Quy trình khi cài ứng dụng mới
 
-1. Đọc [registry.json](./registry.json) để tìm cổng tiếp theo, từ **18899**.
+1. Đọc [registry.json](./registry.json) và ưu tiên số tiếp theo sau ứng dụng thực tế, hiện **18896** nếu chưa bị chiếm. Port được ghi trong các fork chưa cài không có nghĩa là đã được dùng; khi thay đổi ưu tiên, cập nhật sổ và cảnh báo Compose cũ trùng.
 2. Trên **đúng VM/LXC/NAS chạy Docker**, dùng [CHECK_PORTS.sh](./CHECK_PORTS.sh) hoặc lệnh đọc `ss -lntup`, `docker ps -a`, `docker inspect HostConfig.PortBindings`. Kiểm tra cả container đã dừng.
-3. Nếu port được cấp là N, **ưu tiên N:N** cho Caddy gateway. Nếu phần mềm không hỗ trợ đổi cổng nội bộ, ghi rõ ngoại lệ thay vì tuyên bố N:N.
+3. Ánh xạ host:container theo cổng nội bộ chính xác của ứng dụng, không tự thêm Caddy/gateway (ví dụ Freebie Radar 18895:8788).
 4. Không được xem việc cập nhật GitHub là đã triển khai. Sau khi Portainer hiện ứng dụng Running và đúng Published Ports, mới cập nhật trạng thái.
 5. Không xóa Stack/volume, không đổi firewall, không làm gián đoạn ứng dụng khác để lấy port. Luôn để người dùng tự nhập mật khẩu trong Portainer, không commit mật khẩu vào GitHub công khai.
 
-**Lưu ý bảo mật:** Các giao diện đang dùng Caddy Basic Auth trên HTTP LAN, không mã hóa đường truyền; cần mạng tin cậy hoặc HTTPS nội bộ, không NAT ra Internet.
+**Lưu ý bảo mật:** Giao diện qua HTTP LAN không mã hóa đường truyền; cần mạng tin cậy hoặc HTTPS/VPN, không NAT ra Internet. Freebie Radar cần ADMIN_TOKEN để khóa các API quản trị.
