@@ -1,6 +1,6 @@
 {
   "title": "IT-MANAGER Docker host-port allocation",
-  "last_updated": "2026-11-24",
+  "last_updated": "2026-11-26",
   "scope": "Planning register only; no direct access to user's Docker host",
   "safety": "Never publish secrets, actual LAN addresses, account names or hostnames in this public repository",
   "rules": [
@@ -13,15 +13,17 @@
     "Do not automatically deploy/redeploy/change firewall/delete existing containers or volumes without explicit user action.",
     "No secrets, personal account names, actual private host IPs or research results should be committed to the public GitHub port registry.",
     "Port allocations must never collide with screenshot-observed host ports; prioritize sequential 18894..18899 and check all visible published ports.",
-    "User has not separately installed/requisitioned Caddy: never add any reverse-proxy/gateway container without explicit request. In SpiderFoot use only its native Digest auth; other app forks must be reviewed before future deployment to remove earlier gateway assumptions."
+    "User has not separately installed/requisitioned Caddy: never add any reverse-proxy/gateway container without explicit request. In SpiderFoot use only its native Digest auth; other app forks must be reviewed before future deployment to remove earlier gateway assumptions.",
+    "Allocate next host port after last actually deployed service; do not skip host ports merely because other forks have undeployed port plans. When a user installs a different app, update plan and flag any stale Compose conflict in uninstalled forks.",
+    "18895 reassigned to Freebie Radar on user's direct instruction. OpenOSINT's current fork still sets 18895 and conflicts if deployed simultaneously; reassign it upon explicit deployment request."
   ],
   "ranges": [
     {
       "purpose": "OSINT sequential candidate ports",
       "start": 18894,
       "end": 18899,
-      "next_candidate": 18899,
-      "note": "18894-18898 allocated in forks. Next 18899 only a candidate pending direct Docker check"
+      "next_candidate": 18896,
+      "note": "18894 SpiderFoot planned, 18895 Freebie Radar fork deployed config (not live verified), 18896+ pending candidate and/or old fork plans. No skipped allocations for undeployed forks."
     },
     {
       "purpose": "Legacy alternate range, no longer active allocation",
@@ -47,15 +49,15 @@
     },
     {
       "service": "OpenOSINT",
-      "host_port": 18895,
+      "host_port": null,
       "container_port": 18895,
       "protocol": "TCP",
-      "bind": "LAN_IP must be entered by user in Portainer",
+      "bind": "PENDING_REASSIGN_AFTER_LIVE_CHECK",
       "repository": "hoangthang0106/OpenOSINT",
       "branch": "main",
       "compose_path": "docker-compose.yml",
-      "state": "FORK_UPDATED_NOT_LIVE_VERIFIED",
-      "notes": "Code in fork updated for sequential LAN mapping, no evidence live deployed or port available. App backend and Caddy gateway now listen on same designated port; user must check host availability before deploy."
+      "state": "FORK_CONFIG_STILL_18895_NOT_CONFIRMED_DEPLOYED_NEEDS_REASSIGN",
+      "notes": "Previous 18895 candidate is superseded by user-directed next actual Freebie Radar allocation. Fork OpenOSINT docker-compose.yml still defaults to 18895 and must NOT be deployed unchanged simultaneously with Freebie Radar. Do not change fork or deploy without explicit user request; choose available next sequential host port when OpenOSINT is actually installed."
     },
     {
       "service": "Maigret Web",
@@ -92,6 +94,18 @@
       "compose_path": "docker-compose.yml",
       "state": "FORK_UPDATED_NOT_LIVE_VERIFIED",
       "notes": "Code in fork updated for sequential LAN mapping, no evidence live deployed or port available. App backend and Caddy gateway now listen on same designated port; user must check host availability before deploy."
+    },
+    {
+      "service": "Freebie Radar",
+      "host_port": 18895,
+      "container_port": 8788,
+      "protocol": "TCP",
+      "bind": "LAN_IP set by user in Portainer",
+      "repository": "hoangthang0106/freebie-radar",
+      "branch": "main",
+      "compose_path": "docker-compose.yml",
+      "state": "FORK_COMMITTED_USER_NOT_DEPLOY_VERIFIED",
+      "notes": "User directed use next sequential port after SpiderFoot 18894; no evidence former planned OpenOSINT/Maigret/PhoneInfoga/Social Analyzer deployed. Fork Compose uses one official upstream image, no build, no added gateway. Verify 18895 host port free before deploying."
     }
   ],
   "historical_records": [
