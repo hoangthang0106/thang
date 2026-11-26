@@ -18,15 +18,16 @@
     "18895 reassigned to Freebie Radar on user's direct instruction. OpenOSINT's current fork still sets 18895 and conflicts if deployed simultaneously; reassign it upon explicit deployment request.",
     "User preference for future Docker Portainer installs: host:container port N:N (and actual service listener/healthcheck N), whenever the app can change its listen port; do not use mismatched host:container port unless app cannot be reconfigured and user has agreed.",
     "As of 2026-11-26, Excalidraw fork is assigned 18896:18896 after Freebie Radar 18895:18895. Old undeployed Maigret fork still uses 18896 and must not deploy at this port without checking and reassigning. Next new port candidate 18897, verify actual Docker host.",
-    "PerkRadar assigned 18897:18897 on user's instruction. Existing PhoneInfoga fork still holds an outdated 18897 mapping; flag conflict if user deploys it. New next candidate 18898 must be checked against Social Analyzer."
+    "PerkRadar assigned 18897:18897 on user's instruction. Existing PhoneInfoga fork still holds an outdated 18897 mapping; flag conflict if user deploys it. New next candidate 18898 must be checked against Social Analyzer.",
+    "NetAlertX host-network mode: Web UI TCP 18897 and API TCP 18898 are *direct host listener ports*, not Docker N:N publishes; API bind 0.0.0.0 requires external host firewall protection. Use no Caddy without permission. User-reported deleted SpiderFoot 18894 and PerkRadar 18897; do not assume Portainer still runs them."
   ],
   "ranges": [
     {
       "purpose": "OSINT sequential candidate ports",
       "start": 18894,
       "end": 18899,
-      "next_candidate": 18898,
-      "note": "Ports allocated as fork configs (not verified live): 18894 SpiderFoot, 18895 Freebie Radar, 18896 Excalidraw, 18897 PerkRadar. Next 18898 candidate is also old Social Analyzer fork plan; verify host and stale plans before new deployment."
+      "next_candidate": 18899,
+      "note": "NetAlertX uses 18897 web and 18898 API as distinct host-network listeners (user-deleted PerkRadar 18897; old Social Analyzer 18898 is an undeployed conflicting fork). SpiderFoot user-deleted 18894 may be free, verify live before reuse. Next high-water candidate 18899; do not skip earlier free ports when allocating future apps."
     },
     {
       "purpose": "Legacy alternate range, no longer active allocation",
@@ -39,15 +40,15 @@
   "allocations": [
     {
       "service": "SpiderFoot",
-      "host_port": 18894,
+      "host_port": null,
       "container_port": 18894,
       "protocol": "TCP",
-      "bind": "LAN_IP must be entered by user in Portainer",
+      "bind": "NOT_RUNNING_USER_REPORTED_DELETED",
       "repository": "hoangthang0106/spiderfoot",
       "branch": "main",
       "compose_path": "docker-compose.yml",
-      "state": "FORK_SINGLE_CONTAINER_NO_CADDY_PENDING_USER_REDEPLOY",
-      "notes": "Screenshot 2026-11-24: running spiderfoot+spiderfoot-gateway-1 (Caddy unintentionally introduced through earlier Compose). Fork main/master now provides one SpiderFoot service only, native Digest auth via /var/lib/spiderfoot/passwd, published host 18894:18894, preserving volume spiderfoot-data and image spiderfoot:latest. User must explicitly redeploy existing Stack; live port not checked.",
+      "state": "PORTAINER_DELETED_USER_REPORTED_2026_11_26",
+      "notes": "User directly reported deleting the SpiderFoot 192.168.20.194:18894 deployment. GitHub fork still configured for 18894 and remains unmodified; port must be checked on host before reuse.",
       "alternate_branch": "master"
     },
     {
@@ -88,15 +89,15 @@
     },
     {
       "service": "Social Analyzer",
-      "host_port": 18898,
+      "host_port": null,
       "container_port": 18898,
       "protocol": "TCP",
-      "bind": "LAN_IP must be entered by user in Portainer",
+      "bind": "PENDING_REASSIGN_AFTER_LIVE_CHECK",
       "repository": "hoangthang0106/social-analyzer",
       "branch": "main",
       "compose_path": "docker-compose.yml",
-      "state": "FORK_UPDATED_NOT_LIVE_VERIFIED",
-      "notes": "Code in fork updated for sequential LAN mapping, no evidence live deployed or port available. App backend and Caddy gateway now listen on same designated port; user must check host availability before deploy."
+      "state": "FORK_CONFIG_STILL_18898_NOT_CONFIRMED_DEPLOYED_NEEDS_REASSIGN",
+      "notes": "Old Social Analyzer fork still uses host TCP 18898 in docker-compose.yml. New NetAlertX host-network backend API uses host TCP 18898; never deploy both without reassigning Social Analyzer at user's explicit request. No live Social Analyzer deployment was verified."
     },
     {
       "service": "Freebie Radar",
@@ -124,15 +125,28 @@
     },
     {
       "service": "PerkRadar",
-      "host_port": 18897,
+      "host_port": null,
       "container_port": 18897,
       "protocol": "TCP",
-      "bind": "LAN_IP supplied by user at Portainer Git Stack",
+      "bind": "NOT_RUNNING_USER_REPORTED_DELETED",
       "repository": "hoangthang0106/PerkRadar",
       "branch": "main",
       "compose_path": "docker-compose.yml",
-      "state": "FORK_UPDATED_COMPOSE_AUTOBUILD_PENDING_USER_REDEPLOY",
-      "notes": "On 2026-11-26 screenshot Git Stack commit 8499e1e failed to pull nonexistent local image; root docker-compose.yml is NOW updated to build from fork (build . and pull_policy build). Portainer local Docker endpoint may build with Pull and redeploy; Portainer Agent endpoint may fail build, use docker-compose-prebuilt.yml after building local/perkradar-itmanager:18897 via Images/CLI. One service host:container 18897:18897, PORT=18897, health 18897, token min32, persistent volume."
+      "state": "PORTAINER_DELETED_USER_REPORTED_2026_11_26",
+      "notes": "User directly reported deleting PerkRadar 192.168.20.194:18897. Original GitHub fork still holds port 18897; do not redeploy PerkRadar simultaneously with new NetAlertX Web UI 18897 without assigning a different port."
+    },
+    {
+      "service": "NetAlertX",
+      "host_port": 18897,
+      "container_port": 18897,
+      "api_port": 18898,
+      "protocol": "TCP",
+      "bind": "HOST_NETWORK_LISTEN_ADDR_LAN_IP_FOR_WEB_API_ON_ALL_INTERFACES",
+      "repository": "hoangthang0106/NetAlertX",
+      "branch": "main",
+      "compose_path": "docker-compose.yml",
+      "state": "FORK_COMMITTED_USER_NOT_DEPLOY_VERIFIED",
+      "notes": "User fork prepared on 2026-11-26 after user deleted SpiderFoot and PerkRadar stacks. One container official image ghcr.io/netalertx/netalertx:latest; host network (no port mapping), Web UI LISTEN_ADDR=LAN_IP, PORT=18897; backend GraphQL API binds 0.0.0.0:18898; user MUST firewall-deny untrusted access to backend 18898 and set Web login password (default unprotected). Named volume netalertx_data persists DB/config. Verify both host ports 18897/18898 free before deploy. Old Social Analyzer fork still uses 18898."
     }
   ],
   "historical_records": [
